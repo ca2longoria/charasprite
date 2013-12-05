@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -33,14 +34,23 @@ public class charasprite
 			RequestHeader rq = (RequestHeader)super.handleConnection(in, out);
 			if (!rq.success) return null;
 			
-			byte[] content = this.createContent(rq);
+			Map<String,Object> contentData = new HashMap<String,Object>();
+			byte[] content = this.createContent(rq,contentData);
 			
 			// TODO: Where should header-type be determined?  During content
 			//   creation, or here in the handleConnection method? Both make
 			//   reference to RequestHeader attributes...
 			HeaderType ht = HeaderType.TextHtml;
-			if (rq.uri.endsWith(".png"))
-				ht = HeaderType.ImagePng;
+			
+			// WARNING: The URI may *not* end in the filename.  This need be
+			//   resolved somewhere that makes sense.
+			if (contentData.containsKey("headerType"))
+				ht = (HeaderType)contentData.get("headerType");
+			else
+			{
+				System.err.println("ERROR: createContent did not determine a HeaderType.");
+				return null;
+			}
 			
 			// First, the header.
 			PrintWriter pout = new PrintWriter(out);
@@ -57,12 +67,21 @@ public class charasprite
 			return content;
 		}
 		
-		protected byte[] createContent(RequestHeader rq)
+		protected byte[] createContent(RequestHeader rq, Map<String,Object> data)
 		{
 			if (rq.method == Spiffy.Web.RequestMethod.GET)
 			{
 				// Eh... for now, just serve a file.
 				File f = new File("./html"+rq.uri);
+				
+				if (f.exists())
+				{
+					if (data != null)
+					{
+						data.put("absolutePath", f.getAbsolutePath());
+						data.put("fileExtension", f.getName().replaceFirst("^.*\\.", ""));
+					}
+				}
 				
 				if (f.getName().endsWith(".png"))
 				{
@@ -75,6 +94,11 @@ public class charasprite
 					{ e.printStackTrace(); return null; }
 					catch(IOException e)
 					{ e.printStackTrace(); return null; }
+					
+					if (data != null)
+					{
+						data.put("headerType", HeaderType.ImagePng);
+					}
 					
 					return ret;
 				}
@@ -98,6 +122,13 @@ public class charasprite
 						content = "Nothing?";
 						e.printStackTrace();
 					}
+					
+					if (data != null)
+					{
+						// TODO: Distinguish between text file types (plain, html, javascript, ...)
+						data.put("headerType", HeaderType.TextHtml);
+					}
+					
 					return content.getBytes();
 				}
 			}
