@@ -1,8 +1,12 @@
 package charasprite;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Scanner;
 
 import net.synapsehaven.spiffy.Spiffy;
 
@@ -40,9 +44,33 @@ public class charasprite
 			return content;
 		}
 		
-		private String createContent(RequestHeader rq)
+		protected String createContent(RequestHeader rq)
 		{
-			String content = "WHAT!?";
+			String content = null;
+			StringBuilder sb = new StringBuilder();
+			
+			if (rq.method == Spiffy.Web.RequestMethod.GET)
+			{
+				// Eh... for now, just serve a file.
+				File f = new File("./html"+rq.uri);
+				
+				Scanner sc = null;
+				try {
+					sc = new Scanner(new FileInputStream(f));
+					while (sc.hasNextLine())
+					{
+						String line = sc.nextLine();
+						sb.append(line);
+					}
+					content = sb.toString();
+				} catch (FileNotFoundException e)
+				{
+					// Serve... some kind of failure file.
+					content = "Nothing?";
+					e.printStackTrace();
+				}
+			}
+			
 			return content;
 		}
 	}
