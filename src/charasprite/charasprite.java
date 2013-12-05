@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import net.synapsehaven.spiffy.Spiffy;
 
@@ -34,6 +35,7 @@ public class charasprite
 			RequestHeader rq = (RequestHeader)super.handleConnection(in, out);
 			if (!rq.success) return null;
 			
+			// Get the content data, given the request header.
 			Map<String,Object> contentData = new HashMap<String,Object>();
 			byte[] content = this.createContent(rq,contentData);
 			
@@ -42,8 +44,6 @@ public class charasprite
 			//   reference to RequestHeader attributes...
 			HeaderType ht = HeaderType.TextHtml;
 			
-			// WARNING: The URI may *not* end in the filename.  This need be
-			//   resolved somewhere that makes sense.
 			if (contentData.containsKey("headerType"))
 				ht = (HeaderType)contentData.get("headerType");
 			else
@@ -83,7 +83,8 @@ public class charasprite
 					}
 				}
 				
-				if (f.getName().endsWith(".png"))
+				// Image file.
+				if (Pattern.matches(".*\\.(bmp|gif|jpg|png|svg)$", f.getName()))
 				{
 					byte[] ret = new byte[(int)f.length()];
 					try {
@@ -97,11 +98,14 @@ public class charasprite
 					
 					if (data != null)
 					{
-						data.put("headerType", HeaderType.ImagePng);
+						if (f.getName().endsWith(".png"))
+							data.put("headerType", HeaderType.ImagePng);
 					}
 					
 					return ret;
 				}
+				
+				// Text-based file.
 				else
 				{
 					String content = null;
