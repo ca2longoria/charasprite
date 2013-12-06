@@ -83,6 +83,9 @@ public class charasprite
 				// Image file.
 				if (Pattern.matches(".*\\.(bmp|gif|jpg|png|svg)$", f.getName()))
 				{
+					// Create byte[] and fill with file data
+					// TODO: Consolidate this byte[] procuring with that of the
+					//   text-based files block.
 					byte[] ret = new byte[(int)f.length()];
 					try {
 						FileInputStream fin = new FileInputStream(f);
@@ -93,16 +96,18 @@ public class charasprite
 					catch(IOException e)
 					{ e.printStackTrace(); return null; }
 					
+					// Acquire header type metadata.
 					if (data != null)
 					{
+						// Ordered by (personally) perceived likeliness.
 						if (f.getName().endsWith(".png"))
 							data.put("headerType", HeaderType.ImagePng);
-						else if (f.getName().endsWith(".bmp"))
-							data.put("headerType", HeaderType.ImageBmp);
-						else if (f.getName().endsWith(".gif"))
-							data.put("headerType", HeaderType.ImageGif);
 						else if (f.getName().endsWith(".jpg") || f.getName().endsWith(".jpeg"))
 							data.put("headerType", HeaderType.ImageJpg);
+						else if (f.getName().endsWith(".gif"))
+							data.put("headerType", HeaderType.ImageGif);
+						else if (f.getName().endsWith(".bmp"))
+							data.put("headerType", HeaderType.ImageBmp);
 						else if (f.getName().endsWith(".svg"))
 							data.put("headerType", HeaderType.ImageSvgXml);
 					}
