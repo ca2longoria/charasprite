@@ -19,16 +19,56 @@ public class charasprite
 	{
 		// TODO: Change this default value, later; it is Mike's.
 		int port = 1337;
+		Map<String,String> options = null;
 		if (args.length > 0)
+		{
 			port = Integer.parseInt(args[0]);
+			options = parseArguments(args);
+		}
 		
-		Spiffy spiff = new CharaSpiffy();
-		
+		Spiffy spiff = new CharaSpiffy(options);
 		spiff.listen(port);
+	}
+	
+	private static Map<String,String> parseArguments(String[] args)
+	{
+		Map<String,String> ret = new HashMap<String,String>();
+		
+		String s = null; 
+		for (int i=0; i < args.length; ++i)
+		{
+			s = args[i];
+			if (Pattern.matches("^-[^- \t]+", s))
+			{
+				// It's an option!
+				s = s.substring(1);
+				
+				if (s.equalsIgnoreCase("rootdir"))
+				{
+					ret.put(s, args[++i]);
+					continue;
+				}
+			}
+		}
+		
+		return ret;
 	}
 	
 	public static class CharaSpiffy extends Spiffy.Web
 	{
+		public CharaSpiffy() {this(null);}
+		public CharaSpiffy(Map<String,String> options)
+		{
+			// TODO: Maybe replace these strings with constant
+			//   static values from somewhere.
+			if (options.containsKey("rootdir"))
+				rootDirectory = options.get("rootdir");
+			
+			System.out.println("rootDirectory: "+rootDirectory);
+		}
+		
+		protected String rootDirectory = "html";
+		
 		public Object handleConnection(InputStream in, OutputStream out)
 		{
 			RequestHeader rq = (RequestHeader)super.handleConnection(in, out);
@@ -68,7 +108,7 @@ public class charasprite
 			if (rq.method == Spiffy.Web.RequestMethod.GET)
 			{
 				// Eh... for now, just serve a file.
-				File f = new File("./html"+rq.uri);
+				File f = new File(rootDirectory+rq.uri);
 				
 				if (f.exists())
 				{
@@ -165,14 +205,15 @@ public class charasprite
 		
 		public static enum HeaderType
 		{
-			TextPlain,
-			TextHtml,
 			Image,
 			ImageBmp,
 			ImageGif,
 			ImageJpg,
 			ImagePng,
-			ImageSvgXml
+			ImageSvgXml,
+			TextHtml,
+			TextJavascript,
+			TextPlain
 		}
 	}
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project charasprite">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/Cesar/github/charasprite/charasprite.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="charasprite.charasprite"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="C:/Users/Cesar/github/charasprite/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Cesar/github/charasprite/jars/net.synapsehaven.spiffy.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Cesar/github/charasprite/jars/net.synapsehaven.tiff.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Cesar/github/charasprite/jars/jai_codec.win.i586.jar"/>
+        </jar>
+    </target>
+</project>
