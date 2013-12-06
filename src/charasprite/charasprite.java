@@ -106,6 +106,8 @@ public class charasprite
 							data.put("headerType", HeaderType.ImageGif);
 						else if (f.getName().endsWith(".jpg") || f.getName().endsWith(".jpeg"))
 							data.put("headerType", HeaderType.ImageJpg);
+						else if (f.getName().endsWith(".svg"))
+							data.put("headerType", HeaderType.ImageSvgXml);
 					}
 					
 					return ret;
@@ -194,6 +196,12 @@ public class charasprite
 						"Content-Type: image/png%n" +
 						"Content-Length: %d" +
 						"%n%n";
+				case ImageSvgXml:
+					return
+						"HTTP/1.1 200 OK%n" +
+						"Content-Type: image/svg+xml%n" +
+						"Content-Length: %d" +
+						"%n%n";
 				default:
 					return null;
 			}
@@ -208,7 +216,8 @@ public class charasprite
 			ImageBmp,
 			ImageGif,
 			ImageJpg,
-			ImagePng
+			ImagePng,
+			ImageSvgXml
 		}
 	}
 }
