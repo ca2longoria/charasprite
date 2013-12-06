@@ -39,16 +39,12 @@ public class charasprite
 			Map<String,Object> contentData = new HashMap<String,Object>();
 			byte[] content = this.createContent(rq,contentData);
 			
-			// TODO: Where should header-type be determined?  During content
-			//   creation, or here in the handleConnection method? Both make
-			//   reference to RequestHeader attributes...
 			HeaderType ht = HeaderType.TextHtml;
-			
 			if (contentData.containsKey("headerType"))
 				ht = (HeaderType)contentData.get("headerType");
 			else
 			{
-				System.err.println("ERROR: createContent did not determine a HeaderType.");
+				System.err.println("ERROR: createContent did not resolve a HeaderType.");
 				return null;
 			}
 			
@@ -67,6 +63,7 @@ public class charasprite
 			return content;
 		}
 		
+		@SuppressWarnings("resource")
 		protected byte[] createContent(RequestHeader rq, Map<String,Object> data)
 		{
 			if (rq.method == Spiffy.Web.RequestMethod.GET)
@@ -150,61 +147,36 @@ public class charasprite
 		
 		protected String headerStringFormat(HeaderType ht, Map<String,Object> param)
 		{
-			// TODO: Better (shorter) switch case.  Looks like only one thing
-			//   is changing, here.
+			String contentType = null;
+			
 			switch(ht)
 			{
 				case TextPlain:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: text/plain%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "text/plain"; break;
 				case TextHtml:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: text/html%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "text/html"; break;
 				case Image:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: image/%s%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "image/%s"; break;
 				case ImageBmp:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: image/bmp%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "image/bmp"; break;
 				case ImageGif:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: image/gif%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "image/gif"; break;
 				case ImageJpg:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: image/jpg%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "image/jpg"; break;
 				case ImagePng:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: image/png%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "image/png"; break;
 				case ImageSvgXml:
-					return
-						"HTTP/1.1 200 OK%n" +
-						"Content-Type: image/svg+xml%n" +
-						"Content-Length: %d" +
-						"%n%n";
+					contentType = "image/svg+xml"; break;
 				default:
 					return null;
 			}
+			
+			String headerString =
+				"HTTP/1.1 200 OK%n" +
+				"Content-Type: "+contentType+"%n" +
+				"Content-Length: %d" +
+				"%n%n";
+			return headerString;	
 		}
 		
 		
