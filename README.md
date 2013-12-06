@@ -23,7 +23,7 @@ ___
 
 1. In the command-line, or a terminal or shell, _cd_ into the charasprite repo.
 2. Verify the presence of the executable jar file, **charasprite.jar**.
-  * Note that charasprite.jar will be behind the build's source in commit/revision, unless of course you deem to export it, again.
+  * Note that **charasprite.jar** will be behind the build's source in commit/revision, unless of course you deem to export it, again.
 3. Run the following command:
   * java -jar charasprite.jar [desired port number]
 4. Open a browser, and navigate to the address _127.0.0.1:1337/index.template.html_.
