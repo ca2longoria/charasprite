@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -96,6 +97,32 @@ public class charasprite
 		{
 			RequestHeader rq = (RequestHeader)super.handleConnection(in, out);
 			if (!rq.success) return null;
+			
+			// There is probably data if it is POST
+			if (rq.method == RequestMethod.POST)
+			{
+				System.out.println("Well hey! Content-Type: "+rq.contentType);
+				
+				InputStream sin = null;
+				OutputStream sout = null;
+				try {
+					Socket sock = this.serverSock.accept();
+					sin = sock.getInputStream();
+					sout = sock.getOutputStream();
+				} catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+				
+				for (int i = 0; i < 100; ++i)
+				{
+					System.out.println("NEXT 1");
+					byte[] these = new byte[1];
+					try { sin.read(these); }
+					catch (IOException e) { e.printStackTrace(); }
+					System.out.println(new String(these));
+				}
+			}
 			
 			// Get the content data, given the request header.
 			Map<String,Object> contentData = new HashMap<String,Object>();
@@ -191,6 +218,16 @@ public class charasprite
 				// Return byte[] for GET method case.
 				return ret;
 			}
+			else if (rq.method == RequestMethod.POST)
+			{
+				System.err.println("contentType: "+rq.contentType);
+				if (rq.contentType.indexOf("multipart/form-data") >= 0)
+				{
+					data.put("headerType", HeaderType.TextPlain);
+				}
+				
+				return "Something, surely.".getBytes();
+			}
 			
 			return null;
 		}
@@ -240,6 +277,7 @@ public class charasprite
 			ImageJpg,
 			ImagePng,
 			ImageSvgXml,
+			MultipartFormData,
 			TextHtml,
 			TextJavascript,
 			TextPlain

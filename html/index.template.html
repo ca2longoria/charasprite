@@ -2,6 +2,7 @@
 <html>
 
 <head>
+<script type='text/javascript' src='http://synapsehaven.net/jsheaders/basics.js'></script>
 <script type='text/javascript'>
 	function onLoad()
 	{
@@ -9,6 +10,16 @@
 		for (var i=0; i < nodes.length; ++i)
 			if (!nodes[i].className)
 				nodes[i].style.backgroundColor = '#fec';
+		
+		var fdialog = document.getElementById('filedialog');
+		fdialog.onchange = function(e)
+		{
+			console.log(fdialog);
+			console.log(fdialog.files);
+			
+			//var res = $ajax('
+			fdialog.form.submit();
+		};
 	}
 </script>
 <style type='text/css'>
@@ -35,6 +46,13 @@
 
 <body onload="onLoad()">
 	<div>Over there.</div>
+	
+	<div class='testgroup'>
+		Test file loading and... interaction.
+		<form action="/" method="post" enctype="multipart/form-data">
+			<input id='filedialog' type='file' multiple/>
+		</form>
+	</div>
 	
 	<div class='testgroup'>
 		Test image load and render<br/>
