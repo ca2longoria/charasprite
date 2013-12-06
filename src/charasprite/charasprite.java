@@ -18,16 +18,14 @@ public class charasprite
 	public static void main(String[] args)
 	{
 		// TODO: Change this default value, later; it is Mike's.
-		int port = 1337;
 		Map<String,String> options = null;
 		if (args.length > 0)
 		{
-			port = Integer.parseInt(args[0]);
 			options = parseArguments(args);
 		}
 		
-		Spiffy spiff = new CharaSpiffy(options);
-		spiff.listen(port);
+		CharaSpiffy cspiff = new CharaSpiffy(options);
+		cspiff.listen();
 	}
 	
 	private static Map<String,String> parseArguments(String[] args)
@@ -48,11 +46,17 @@ public class charasprite
 					ret.put(s, args[++i]);
 					continue;
 				}
+				else if (s.equalsIgnoreCase("port"))
+				{
+					ret.put(s, args[++i]);
+					continue;
+				}
 			}
 		}
 		
 		return ret;
 	}
+	
 	
 	public static class CharaSpiffy extends Spiffy.Web
 	{
@@ -63,11 +67,21 @@ public class charasprite
 			//   static values from somewhere.
 			if (options.containsKey("rootdir"))
 				rootDirectory = options.get("rootdir");
+			if (options.containsKey("port"))
+				port = Integer.parseInt(options.get("port"));
 			
 			System.out.println("rootDirectory: "+rootDirectory);
 		}
 		
+		protected static int defaultPort = -1;
+		
+		protected int port = defaultPort;
 		protected String rootDirectory = "html";
+		
+		public void listen()
+		{
+			this.listen(port);
+		}
 		
 		public Object handleConnection(InputStream in, OutputStream out)
 		{
