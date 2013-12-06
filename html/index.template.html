@@ -7,14 +7,51 @@
 	{
 		var nodes = document.querySelectorAll('div');
 		for (var i=0; i < nodes.length; ++i)
-			nodes[i].style.backgroundColor = '#fec';
+			if (!nodes[i].className)
+				nodes[i].style.backgroundColor = '#fec';
 	}
 </script>
+<style type='text/css'>
+	.box
+	{
+		min-width: 5px;
+		display: inline-block;
+		
+		border-style: solid;
+		border-color: #333;
+		border-width: 1px;
+		background-color: #9eb;
+	}
+</style>
 </head>
 
 <body onload="onLoad()">
 	<div>Over there.</div>
-	<img src="3-thumbs.png"/>
+	
+	<div class='box'>
+		<p>Test BMP</p>
+		<img src="little-screaming.bmp"/>
+	</div>
+	
+	<div class='box'>
+		<p>Test GIF</p>
+		<img src="brain-icon-1.gif"/>
+	</div>
+	
+	<div class='box'>
+	<p>Test JPG</p>
+		<img width=256 height=256 src="zbak-graw.jpg"/>
+	</div>
+	
+	<div class='box'>
+		<p>Test PNG</p>
+		<img src="3-thumbs.png"/>
+	</div>
+	
+	<div class='box'>
+		<p>Test SVG</p>
+	</div>
+	
 	<div>No, over there.</div>
 </body>
 

@@ -100,6 +100,12 @@ public class charasprite
 					{
 						if (f.getName().endsWith(".png"))
 							data.put("headerType", HeaderType.ImagePng);
+						else if (f.getName().endsWith(".bmp"))
+							data.put("headerType", HeaderType.ImageBmp);
+						else if (f.getName().endsWith(".gif"))
+							data.put("headerType", HeaderType.ImageGif);
+						else if (f.getName().endsWith(".jpg") || f.getName().endsWith(".jpeg"))
+							data.put("headerType", HeaderType.ImageJpg);
 					}
 					
 					return ret;
@@ -142,6 +148,8 @@ public class charasprite
 		
 		protected String headerStringFormat(HeaderType ht, Map<String,Object> param)
 		{
+			// TODO: Better (shorter) switch case.  Looks like only one thing
+			//   is changing, here.
 			switch(ht)
 			{
 				case TextPlain:
@@ -162,6 +170,24 @@ public class charasprite
 						"Content-Type: image/%s%n" +
 						"Content-Length: %d" +
 						"%n%n";
+				case ImageBmp:
+					return
+						"HTTP/1.1 200 OK%n" +
+						"Content-Type: image/bmp%n" +
+						"Content-Length: %d" +
+						"%n%n";
+				case ImageGif:
+					return
+						"HTTP/1.1 200 OK%n" +
+						"Content-Type: image/gif%n" +
+						"Content-Length: %d" +
+						"%n%n";
+				case ImageJpg:
+					return
+						"HTTP/1.1 200 OK%n" +
+						"Content-Type: image/jpg%n" +
+						"Content-Length: %d" +
+						"%n%n";
 				case ImagePng:
 					return
 						"HTTP/1.1 200 OK%n" +
@@ -179,6 +205,9 @@ public class charasprite
 			TextPlain,
 			TextHtml,
 			Image,
+			ImageBmp,
+			ImageGif,
+			ImageJpg,
 			ImagePng
 		}
 	}
