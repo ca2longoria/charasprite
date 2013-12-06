@@ -18,3 +18,10 @@ ___
   * Port 1337 is a temporary default.  The first argument of the java execution will be read as a port number, which will be used instead, if provided.
 4. If you see a few silly pictures, it is working fine.
   * Note that you will have to stop the server manually from Eclipse.  There may presently be an issue where the contents of the html directory will block delete permissions while the socket is open.
+
+**Alternatively...**
+1. In the command-line, or a terminal or shell, cd into the charasprite repo.
+2. Verify the presence of the executable jar file, **charasprite.jar**.
+  * Note that charasprite.jar will be behind the build's source in commit/revision, unless of course you deem to export it, again.
+3. Run the following command:
+  * java -jar charasprite.jar <desired port number>
