@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import net.synapsehaven.spiffy.Spiffy;
@@ -80,22 +79,21 @@ public class charasprite
 					}
 				}
 				
+				// Create byte[] and fill with file data.  byte[] ret will return
+				// at the close of this if-block.
+				byte[] ret = new byte[(int)f.length()];
+				try {
+					FileInputStream fin = new FileInputStream(f);
+					fin.read(ret);
+				}
+				catch(FileNotFoundException e)
+				{ e.printStackTrace(); return null; }
+				catch(IOException e)
+				{ e.printStackTrace(); return null; }
+				
 				// Image file.
 				if (Pattern.matches(".*\\.(bmp|gif|jpg|png|svg)$", f.getName()))
 				{
-					// Create byte[] and fill with file data
-					// TODO: Consolidate this byte[] procuring with that of the
-					//   text-based files block.
-					byte[] ret = new byte[(int)f.length()];
-					try {
-						FileInputStream fin = new FileInputStream(f);
-						fin.read(ret);
-					}
-					catch(FileNotFoundException e)
-					{ e.printStackTrace(); return null; }
-					catch(IOException e)
-					{ e.printStackTrace(); return null; }
-					
 					// Acquire header type metadata.
 					if (data != null)
 					{
@@ -111,40 +109,20 @@ public class charasprite
 						else if (f.getName().endsWith(".svg"))
 							data.put("headerType", HeaderType.ImageSvgXml);
 					}
-					
-					return ret;
 				}
 				
 				// Text-based file.
 				else
 				{
-					String content = null;
-					StringBuilder sb = new StringBuilder();
-				
-					Scanner sc = null;
-					try {
-						sc = new Scanner(new FileInputStream(f));
-						while (sc.hasNextLine())
-						{
-							String line = sc.nextLine();
-							sb.append(line);
-						}
-						content = sb.toString();
-					} catch (FileNotFoundException e)
-					{
-						// Serve... some kind of failure file.
-						content = "Nothing?";
-						e.printStackTrace();
-					}
-					
 					if (data != null)
 					{
 						// TODO: Distinguish between text file types (plain, html, javascript, ...)
 						data.put("headerType", HeaderType.TextHtml);
 					}
-					
-					return content.getBytes();
 				}
+				
+				// Return byte[] for GET method case.
+				return ret;
 			}
 			
 			return null;
