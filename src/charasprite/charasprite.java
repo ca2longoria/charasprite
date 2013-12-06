@@ -17,7 +17,6 @@ public class charasprite
 {
 	public static void main(String[] args)
 	{
-		// TODO: Change this default value, later; it is Mike's.
 		Map<String,String> options = null;
 		if (args.length > 0)
 		{
@@ -25,9 +24,12 @@ public class charasprite
 		}
 		
 		CharaSpiffy cspiff = new CharaSpiffy(options);
+		
 		cspiff.listen();
 	}
 	
+	// TODO: Decide whether arguments should be parsed statically, or
+	//   if they ought be determined at the CharaSpiffy level.
 	private static Map<String,String> parseArguments(String[] args)
 	{
 		Map<String,String> ret = new HashMap<String,String>();
@@ -65,13 +67,16 @@ public class charasprite
 		{
 			// TODO: Maybe replace these strings with constant
 			//   static values from somewhere.
-			if (options.containsKey("rootdir"))
-				rootDirectory = options.get("rootdir");
-			if (options.containsKey("port"))
-				port = Integer.parseInt(options.get("port"));
+			if (options != null)
+			{
+				if (options.containsKey("rootdir"))
+					rootDirectory = options.get("rootdir");
+				if (options.containsKey("port"))
+					port = Integer.parseInt(options.get("port"));
+			}
 		}
 		
-		public final static int defaultPort = 12321;
+		public final static int defaultPort = 10801;
 		
 		protected int port = defaultPort;
 		protected String rootDirectory = "html";
