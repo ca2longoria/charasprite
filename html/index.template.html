@@ -16,11 +16,19 @@
 	{
 		min-width: 5px;
 		display: inline-block;
-		
+		background-color: #9eb;
 		border-style: solid;
 		border-color: #333;
 		border-width: 1px;
-		background-color: #9eb;
+	}
+	.testgroup
+	{
+		background-color: #b9e;
+		border-style: solid;
+		border-color: #666;
+		border-width: 1px;
+		margin-top: 10px;
+		font-family: Arial;
 	}
 </style>
 </head>
@@ -28,29 +36,32 @@
 <body onload="onLoad()">
 	<div>Over there.</div>
 	
-	<div class='box'>
-		<p>Test BMP</p>
-		<img src="little-screaming.bmp"/>
-	</div>
-	
-	<div class='box'>
-		<p>Test GIF</p>
-		<img src="brain-icon-1.gif"/>
-	</div>
-	
-	<div class='box'>
-	<p>Test JPG</p>
-		<img width=256 height=256 src="zbak-graw.jpg"/>
-	</div>
-	
-	<div class='box'>
-		<p>Test PNG</p>
-		<img src="3-thumbs.png"/>
-	</div>
-	
-	<div class='box'>
-		<p>Test SVG</p>
-		<object data="slice.svg" type="image/svg+xml"></object>
+	<div class='testgroup'>
+		Test image load and render<br/>
+		<div class='box'>
+			<p>Test BMP</p>
+			<img src="media/little-screaming.bmp"/>
+		</div>
+		
+		<div class='box'>
+			<p>Test GIF</p>
+			<img src="media/brain-icon-1.gif"/>
+		</div>
+		
+		<div class='box'>
+		<p>Test JPG</p>
+			<img width=256 height=256 src="media/zbak-graw.jpg"/>
+		</div>
+		
+		<div class='box'>
+			<p>Test PNG</p>
+			<img src="media/3-thumbs.png"/>
+		</div>
+		
+		<div class='box'>
+			<p>Test SVG</p>
+			<object data="media/slice.svg" type="image/svg+xml"></object>
+		</div>
 	</div>
 	
 	<div>No, over there.</div>
