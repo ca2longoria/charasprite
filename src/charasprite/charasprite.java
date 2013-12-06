@@ -69,11 +69,9 @@ public class charasprite
 				rootDirectory = options.get("rootdir");
 			if (options.containsKey("port"))
 				port = Integer.parseInt(options.get("port"));
-			
-			System.out.println("rootDirectory: "+rootDirectory);
 		}
 		
-		protected static int defaultPort = -1;
+		public final static int defaultPort = 12321;
 		
 		protected int port = defaultPort;
 		protected String rootDirectory = "html";
@@ -81,6 +79,12 @@ public class charasprite
 		public void listen()
 		{
 			this.listen(port);
+		}
+		public void listen(int port)
+		{
+			System.out.println("Socket connecting to port: "+port);
+			System.out.println("Root directory: "+rootDirectory);
+			super.listen(port);
 		}
 		
 		public Object handleConnection(InputStream in, OutputStream out)
@@ -170,8 +174,12 @@ public class charasprite
 				{
 					if (data != null)
 					{
-						// TODO: Distinguish between text file types (plain, html, javascript, ...)
-						data.put("headerType", HeaderType.TextHtml);
+						if (f.getName().endsWith(".js"))
+							data.put("headerType", HeaderType.TextJavascript);
+						else if (f.getName().endsWith(".htm") || f.getName().endsWith(".html"))
+							data.put("headerType", HeaderType.TextHtml);
+						else
+							data.put("headerType", HeaderType.TextPlain);
 					}
 				}
 				
@@ -192,6 +200,8 @@ public class charasprite
 					contentType = "text/plain"; break;
 				case TextHtml:
 					contentType = "text/html"; break;
+				case TextJavascript:
+					contentType = "text/javascript"; break;
 				case Image:
 					contentType = "image/%s"; break;
 				case ImageBmp:
