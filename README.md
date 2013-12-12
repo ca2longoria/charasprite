@@ -1,3 +1,4 @@
+# NOTE: This entire project is DEPRECATED in favor of github project _spritely_.
 charasprite
 ===========
 
